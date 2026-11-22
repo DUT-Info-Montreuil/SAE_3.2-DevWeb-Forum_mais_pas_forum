@@ -60,12 +60,11 @@ class UtilisateurView extends Vue
         <form action="index.php?module=utilisateur&route=connecter" method="post" enctype="multipart/form-data">
             <input type="hidden" name="jeton" value="<?= e($_SESSION["jeton"]) ?>">
             <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom"required>
+            <input type="text" id="nom" name="nom" required>
             <label for="email">Email</label>
-            <input type="text" id="email" name="email"required>
+            <input type="text" id="email" name="email" required>
             <label for="mot_de_passe_hash">Mot de passe</label>
-            <input type="password" id="mot_de_passe_hash" name="mot_de_passe_hash"required>
-            </label>
+            <input type="password" id="mot_de_passe_hash" name="mot_de_passe_hash" required>
             <button type="submit">Envoyer</button>
         </form>
         <a href="index.php?module=utilisateur&amp;route=inscrire">Créer un compte</a>
