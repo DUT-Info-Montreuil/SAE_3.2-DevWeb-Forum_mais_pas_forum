@@ -56,9 +56,32 @@ class UtilisateurController
         $this->vue->afficherFormulaireInscription();
     }
 
-    public function formulaireConnexion()
+    public function formulaireconnexion()
     {
         $this->vue->afficherFormulaireConnexion();
+    }
+
+    public function connexion(): void{
+        //juste verifier les 3 valeurs
+        $emailUtilisateur = trim($_POST['email'] ?? '');
+        if ($this->utilisateurRepository->findByEMail($emailUtilisateur ) === null) {
+            die("email incorrect");
+        }
+        $utilisateur = $this->utilisateurRepository->findByEMail($emailUtilisateur);
+        $nomUtilisateur = trim($_POST['nom'] ?? '');
+        if($nomUtilisateur !== $utilisateur->getNom()){
+            die("nom incorrect");
+        }
+        $mot_de_passe_hash_Utilisateur = trim($_POST['mot_de_passe_hash'] ?? '');
+        if($utilisateur === null || !password_verify($mot_de_passe_hash_Utilisateur,$utilisateur->getMDP())){
+            die("mdp incorrect");
+        }
+        echo ' connexion réussi';
+        session_regenerate_id(true);
+        $_SESSION["id_utilisateur"]= $utilisateur->getId();
+        header('Location: index.php?module=utilisateur&route=test');
+        exit;
+
     }
 
     public function afficherLesInscrit()

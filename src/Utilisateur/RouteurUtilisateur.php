@@ -11,17 +11,15 @@ class UtilisateurRouteur
     public function router() : void {
 
         $route = $_GET["route"] ?? "formulaire_inscription";
-    if ($route === 'formulaire_inscription') {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $this->utilisateurController->formulaireInscription();
-        }  else {
-            http_response_code(405);
-            echo 'Méthode non autorisée';}
-    }
-    elseif ($route === 'inscrire') {
+
+    if ($route === 'inscrire') {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->utilisateurController->inscrire();
-        } else {
+        }
+        elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $this->utilisateurController->formulaireInscription();
+        }
+        else {
             http_response_code(405);
             echo 'Méthode non autorisée';
         }
@@ -30,6 +28,17 @@ class UtilisateurRouteur
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $this->utilisateurController->afficherLesInscrit();
         } else {
+            http_response_code(405);
+            echo 'Méthode non autorisée';
+        }
+    }
+    elseif ($route === 'connecter') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {// tester connexion par post
+            $this->utilisateurController->connexion();
+        }elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){//afficher formulaire comme c par get
+            $this->utilisateurController->formulaireconnexion();
+        }
+        else {
             http_response_code(405);
             echo 'Méthode non autorisée';
         }
