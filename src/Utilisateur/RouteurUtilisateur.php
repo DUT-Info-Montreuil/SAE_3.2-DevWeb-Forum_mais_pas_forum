@@ -43,6 +43,14 @@ class UtilisateurRouteur
             echo 'Méthode non autorisée';
         }
     }
+    elseif ($route === 'deconnecter') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->utilisateurController->deconnecter();
+        } else {
+            http_response_code(405);
+            echo 'Méthode non autorisée';
+        }
+    }
     else {
         http_response_code(404);
         echo "Action inconnue";

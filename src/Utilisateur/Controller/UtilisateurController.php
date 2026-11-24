@@ -46,8 +46,7 @@ class UtilisateurController
         $utilisateur = new Utilisateur(0, $nomUtilisateur, $emailUtilisateur, $mot_de_passe_hash_Utilisateur, $role);// 0 pour id car de tt façon dans le repository l'id n'est pas envoyer dans la bd donc un nouvel id sera crée
         $this->utilisateurRepository->inscrire($utilisateur);
 
-        //header('Location: index.php?module=utilisateur&route=formulaire_connexion');
-        header('Location: index.php?module=utilisateur&route=test');
+        header('Location: index.php?module=utilisateur&route=connecter');
         exit;
     }
 
@@ -82,6 +81,14 @@ class UtilisateurController
         header('Location: index.php?module=utilisateur&route=test');
         exit;
 
+    }
+
+    public function deconnecter() {
+        $_SESSION = [];
+        setcookie(session_name(), "", ["expires" => time() - 3600,"path" => "/","secure" => true,"httponly" => true,"samesite" => "Lax",]);
+        session_destroy();
+        header('Location: index.php?module=utilisateur&route=connecter');
+        exit;
     }
 
     public function afficherLesInscrit()

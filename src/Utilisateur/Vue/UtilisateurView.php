@@ -47,7 +47,6 @@ class UtilisateurView extends Vue
             </section>
             <?php
         }
-        echo '<p><a href="index.php?module=utilisateur&amp;route=inscrire">Retour inscription</a></p>';
         ?>
         <?php
         $this->afficherPage('Les utilisateurs inscrit');
