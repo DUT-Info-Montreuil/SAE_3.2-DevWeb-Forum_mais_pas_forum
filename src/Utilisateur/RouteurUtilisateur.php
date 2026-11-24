@@ -10,7 +10,7 @@ class UtilisateurRouteur
 
     public function router() : void {
 
-        $route = $_GET["route"] ?? "formulaire_inscription";
+        $route = $_GET["route"] ?? "inscrire";
 
     if ($route === 'inscrire') {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
