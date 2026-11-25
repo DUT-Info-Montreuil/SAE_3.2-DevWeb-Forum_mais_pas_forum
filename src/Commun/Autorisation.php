@@ -1,24 +1,10 @@
 <?php
 
-class Autorisations{
+class Autorisations
+{
 
 
 // on attend d'avoir les noms des actions qu'on va choisir
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //exemple des TP
