@@ -16,24 +16,33 @@ class JeuxRouteur{
             $this->jeuxController->liste();
         }elseif($route === "detail"){
             $id_jeux = filter_input(INPUT_GET , "id_jeux" , FILTER_VALIDATE_INT);
-            if($id_jeux === false || $id_jeux === null || $_SERVER["REQUEST_METHOD"] !== "GET"){
+            if($id_jeux === false || $id_jeux === null){
                 http_response_code(404);
                 echo "Identifiant incorrect";
-            }else{
-                $this->jeuxController->detail($id_jeux);
+                exit;
             }
+            if($_SERVER["REQUEST_METHOD"] !== "GET"){
+                http_response_code(404);
+                exit;
+            }
+
+                $this->jeuxController->detail($id_jeux);
+
         }elseif($route === "formulaire_modification"){
             $id_jeux = filter_input(INPUT_GET , "id_jeux" , FILTER_VALIDATE_INT);
+
+            if($_SERVER["REQUEST_METHOD"] !== "GET"){
+                http_response_code(404);
+                exit;
+            }
+
             if($id_jeux === false || $id_jeux === null){
                 http_response_code(404);
                 echo "Identifiant incorrect";
                 exit;
             }
 
-            if($_SERVER["REQUEST_METHOD"] !== "GET"){
-                http_response_code(404);
-                exit;
-            }
+
 
 
             $this->jeuxController->formulaireModification($id_jeux);
