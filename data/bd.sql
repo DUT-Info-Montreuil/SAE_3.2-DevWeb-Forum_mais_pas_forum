@@ -1,3 +1,11 @@
+/*
+Important
+
+tout modification est a faire direcement sur la console bd.sqlite en allant sur
+   licone Database chercher bd.sqlite et clique droit dessus New -> New query et voila
+   cliquer et selectionner les requete a executer et cliquer licone verte
+ */
+
 CREATE TABLE Jeux(
    id_jeux INT,
    nom_jeux VARCHAR(256) NOT NULL,
@@ -136,7 +144,7 @@ CREATE TABLE Notification_demande(
    id_utilisateur INT,
    id_demande INT,
    date_notif_demande DATE,
-   description_notif_demande VARCHAR(256),
+   description_notif_demande VARCHAR(256),main
    PRIMARY KEY(id_utilisateur, id_demande),
    FOREIGN KEY(id_utilisateur) REFERENCES Utilisateur(id_utilisateur),
    FOREIGN KEY(id_demande) REFERENCES Demande(id_demande)
@@ -150,4 +158,7 @@ CREATE TABLE Avoir(
    FOREIGN KEY(id_extension) REFERENCES Extension(id_extension)
 );
 
-
+/* tout modification est a faire direcement sur la console bd.sqlite en allant sur
+   licone Database chercher bd.sqlite et clique droit dessus New -> New query et voila
+   cliquer et selectionner les requete a executer et cliquer licone verte
+ */

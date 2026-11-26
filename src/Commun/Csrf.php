@@ -3,22 +3,26 @@
 class Csrf {
 
     public static function jeton(): string {
-        return bin2hex(random_bytes(32));
+        if(!isset($_SESSION["jeton"])){
+            $_SESSION["jeton"] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION["jeton"];
     }
 
 
     public static function verifier($valeur): bool {
-        if (!is_string($valeur)){
+        if(!isset($_SESSION["jeton"])){
             return false;
         }
+        if(!is_string($valeur)){
+            return false;
+        }
+        if(!hash_equals($_SESSION["jeton"] ?? "" , $valeur)){
 
-        if (!hash_equals($_SESSION["jeton"] ?? "", $valeur)) {
-            http_response_code(403);
-            echo 'mauvais jeton';
             return false;
+
         }
-        echo 'bon jeton';
-        return true;
-    }
+        return true;}
+
 }
 ?>

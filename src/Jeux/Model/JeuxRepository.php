@@ -21,7 +21,7 @@ class JeuxRepository extends BDD{
     return $listedejeux;}
 
     public function findById(int $id_jeux): ?Jeux{
-        $requete = BDD::$pdo->prepare("SELECT * FROM Jeux");
+        $requete = BDD::$pdo->prepare("SELECT * FROM Jeux WHERE id_jeux = :id_jeux");
         $requete->execute(["id_jeux" => $id_jeux]);
         $resultat = $requete->fetch(PDO::FETCH_ASSOC);
         if (!$resultat){
@@ -31,12 +31,13 @@ class JeuxRepository extends BDD{
     }
 
     public function ajouter(Jeux $j): int{ //je meteais arreter la et je devais maide du TP4 pour le finir !
-        $requete = BDD::$pdo->prepare("INSERT INTO Jeux (nom_jeux, configuration_minimal, configuration_requise, description_jeux) VALUES (:nom_jeux, :configuration_minimal, :configuration_requise, :description_jeux)");
+        $requete = BDD::$pdo->prepare("INSERT INTO Jeux (nom_jeux, configuration_minimal, configuration_requise, description_jeux , logo) VALUES (:nom_jeux, :configuration_minimal, :configuration_requise, :description_jeux , :logo)");
         $requete->execute([
             "nom_jeux" => $j->getNom_jeux(),
-            "minimal" => $j->getConfig_minimal(),
-            "requise" => $j->getConfig_requise(),
-            "description" => $j->getDescription()
+            "configuration_minimal" => $j->getConfig_minimal(),
+            "configuration_requise" => $j->getConfig_requise(),
+            "description_jeux" => $j->getDescription(),
+            "logo" => $j->getLogo()
         ]);
         $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
         return BDD::$pdo->lastInsertId();
@@ -50,28 +51,26 @@ class JeuxRepository extends BDD{
         SET nom_jeux = :nom_jeux,
             configuration_minimal = :configuration_minimal,
             configuration_requise = :configuration_requise,
-            description_jeux = :description_jeux
+            description_jeux = :description_jeux,
+            logo = :logo
         WHERE id_jeux = :id_jeux
     ");
 
         $requete->execute([
             "nom_jeux" => $jeux->getNom_jeux(),
-            "minimal" => $jeux->getConfig_minimal(),
-            "requise" => $jeux->getConfig_requise(),
-            "description" => $jeux->getDescription(),
+            "configuration_minimal" => $jeux->getConfig_minimal(),
+            "configuration_requise" => $jeux->getConfig_requise(),
+            "description_jeux" => $jeux->getDescription(),
+            "logo" => $jeux->getLogo(),
             "id_jeux" => $jeux->getId()
         ]);
     }
 
+    public function supprimer(int $id_jeux): void{
+        $requete = BDD::$pdo->prepare("DELETE FROM Jeux WHERE id_jeux = :id_jeux");
 
-
-
-
-
-
-
-
-
+        $requete->execute(["id_jeux" => $id_jeux]);
+    }
 
 
 

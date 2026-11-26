@@ -36,6 +36,12 @@ class JeuxRouteur{
 
         }elseif($route === "ajouter"){
             $this->jeuxController->ajouter();
+        }elseif($route === "supprimer"){
+            if($_SERVER["REQUEST_METHOD"] !== "POST"){
+                http_response_code(404);
+                exit;
+            }
+            $this->jeuxController->supprimer();
         }
 
         elseif ($route === "formulaire_ajout"){

@@ -33,7 +33,7 @@ abstract class BDD
 
     public function __construct()
     {
-        $fichier = __DIR__ . '/../../data/bd.sqlite';
+        $fichier = __DIR__ . '/../../../data/bd.sqlite';
 
         self::$pdo = new PDO('sqlite:' . $fichier);
 
