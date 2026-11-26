@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../Model/Utilisateur.php';
 require_once __DIR__ . '/../../Commun/Xss.php';//méthode e()
 require_once __DIR__ . '/../../Commun/Vue.php';
@@ -8,8 +7,7 @@ class UtilisateurView extends Vue
 {
 
 
-    public function afficherFormulaireInscription(): void
-    {
+    public function afficherFormulaireInscription(): void {
         $this->debutContenu();
         ?>
         <h1>Inscription</h1>
@@ -54,8 +52,7 @@ class UtilisateurView extends Vue
         $this->afficherPage('Les utilisateurs inscrit');
     }
 
-    public function afficherFormulaireConnexion(): void
-    {
+    public function afficherFormulaireConnexion(): void {
         $this->debutContenu();
         ?>
         <h1>Connexion</h1>

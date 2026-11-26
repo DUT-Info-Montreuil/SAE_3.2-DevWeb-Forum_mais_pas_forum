@@ -8,10 +8,10 @@ class UtilisateurController
     private UtilisateurRepository $utilisateurRepository;
     private UtilisateurView $vue;
 
-    public function __construct(UtilisateurRepository $utilisateurRepository, UtilisateurView $vue)
+    public function __construct( UtilisateurRepository $utilisateurRepository,  UtilisateurView $vue)
     {
-        $this->utilisateurRepository = $utilisateurRepository;
-        $this->vue = $vue;
+        $this ->utilisateurRepository = $utilisateurRepository;
+        $this ->vue = $vue;
     }
 
     public function inscrire(): void
@@ -60,34 +60,32 @@ class UtilisateurController
         $this->vue->afficherFormulaireConnexion();
     }
 
-    public function connexion(): void
-    {
+    public function connexion(): void{
         //juste verifier les 3 valeurs
         $emailUtilisateur = trim($_POST['email'] ?? '');
-        if ($this->utilisateurRepository->findByEMail($emailUtilisateur) === null) {
+        if ($this->utilisateurRepository->findByEMail($emailUtilisateur ) === null) {
             die("email incorrect");
         }
         $utilisateur = $this->utilisateurRepository->findByEMail($emailUtilisateur);
         $nomUtilisateur = trim($_POST['nom'] ?? '');
-        if ($nomUtilisateur !== $utilisateur->getNom()) {
+        if($nomUtilisateur !== $utilisateur->getNom()){
             die("nom incorrect");
         }
         $mot_de_passe_hash_Utilisateur = trim($_POST['mot_de_passe_hash'] ?? '');
-        if ($utilisateur === null || !password_verify($mot_de_passe_hash_Utilisateur, $utilisateur->getMDP())) {
+        if($utilisateur === null || !password_verify($mot_de_passe_hash_Utilisateur,$utilisateur->getMDP())){
             die("mdp incorrect");
         }
         echo ' connexion réussi';
         session_regenerate_id(true);
-        $_SESSION["id_utilisateur"] = $utilisateur->getId();
+        $_SESSION["id_utilisateur"]= $utilisateur->getId();
         header('Location: index.php?module=utilisateur&route=test');
         exit;
 
     }
 
-    public function deconnecter()
-    {
+    public function deconnecter() {
         $_SESSION = [];
-        setcookie(session_name(), "", ["expires" => time() - 3600, "path" => "/", "secure" => true, "httponly" => true, "samesite" => "Lax",]);
+        setcookie(session_name(), "", ["expires" => time() - 3600,"path" => "/","secure" => true,"httponly" => true,"samesite" => "Lax",]);
         session_destroy();
         header('Location: index.php?module=utilisateur&route=connecter');
         exit;
