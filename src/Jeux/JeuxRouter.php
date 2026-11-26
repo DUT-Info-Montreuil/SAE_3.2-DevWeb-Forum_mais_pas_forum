@@ -9,10 +9,14 @@ class JeuxRouteur{
     public function router(): void{
         $route = $_GET["route"] ?? "liste";
         if($route === "liste"){
+            if($_SERVER["REQUEST_METHOD"] !== "GET"){
+                http_response_code(404);
+                exit;
+            }
             $this->jeuxController->liste();
         }elseif($route === "detail"){
             $id_jeux = filter_input(INPUT_GET , "id_jeux" , FILTER_VALIDATE_INT);
-            if($id_jeux === false || $id_jeux === null){
+            if($id_jeux === false || $id_jeux === null || $_SERVER["REQUEST_METHOD"] !== "GET"){
                 http_response_code(404);
                 echo "Identifiant incorrect";
             }else{
@@ -20,7 +24,7 @@ class JeuxRouteur{
             }
         }elseif($route === "formulaire_modification"){
             $id_jeux = filter_input(INPUT_GET , "id_jeux" , FILTER_VALIDATE_INT);
-            if($id_jeux === false || $id_jeux === null){
+            if($id_jeux === false || $id_jeux === null || $_SERVER["REQUEST_METHOD"] !== "GET"){
                 http_response_code(404);
                 echo "Identifiant incorrect";
             }else{
@@ -35,6 +39,10 @@ class JeuxRouteur{
             }
 
         }elseif($route === "ajouter"){
+            if($_SERVER["REQUEST_METHOD"] !== "POST"){
+                http_response_code(404);
+                exit;
+            }
             $this->jeuxController->ajouter();
         }elseif($route === "supprimer"){
             if($_SERVER["REQUEST_METHOD"] !== "POST"){
@@ -45,6 +53,10 @@ class JeuxRouteur{
         }
 
         elseif ($route === "formulaire_ajout"){
+            if($_SERVER["REQUEST_METHOD"] !== "GET"){
+                http_response_code(404);
+                exit;
+            }
             $this->jeuxController->formulaireAjout();
         }
     }
