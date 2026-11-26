@@ -1,10 +1,10 @@
 CREATE TABLE Jeux(
-                     id_jeux INT AUTOINCREMENT,
+                     id_jeux INTEGER PRIMARY KEY AUTOINCREMENT,
                      nom_jeux VARCHAR(256) NOT NULL,
                      description_jeux VARCHAR(256),
                      configuration_minimal VARCHAR(256),
                      configuration_requise VARCHAR(256),
-                     PRIMARY KEY(id_jeux)
+                     logo VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE Role(
@@ -147,7 +147,7 @@ CREATE TABLE Avoir(
    FOREIGN KEY(id_extension) REFERENCES Extension(id_extension)
 );
 
-/* tout modification est a faire direcement sur la console bd.sqlite en allant sur
-   licone Database chercher bd.sqlite et clique droit dessus New -> New query et voila
+/* tout modification est a faire direcement sur la console bdM.sqlite en allant sur
+   licone Database chercher bdM.sqlite et clique droit dessus New -> New query et voila
    cliquer et selectionner les requete a executer et cliquer licone verte
  */

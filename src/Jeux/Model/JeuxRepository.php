@@ -4,12 +4,11 @@ class JeuxRepository extends BDD{
 
     public function __construct()
     {
-        //$file = require_once __DIR__ . '/../../../data/bd.sql';
-        //$this->pdo = new PDO($file);
+
         parent::__construct();
     }
     public function findAll(): array{
-        $requete = BDD::$pdo->prepare("SELECT * FROM Jeux");
+        $requete = self::$pdo->prepare("SELECT * FROM Jeux");
         $requete->execute();
         $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
 
@@ -21,7 +20,7 @@ class JeuxRepository extends BDD{
     return $listedejeux;}
 
     public function findById(int $id_jeux): ?Jeux{
-        $requete = BDD::$pdo->prepare("SELECT * FROM Jeux WHERE id_jeux = :id_jeux");
+        $requete = self::$pdo->prepare("SELECT * FROM Jeux WHERE id_jeux = :id_jeux");
         $requete->execute(["id_jeux" => $id_jeux]);
         $resultat = $requete->fetch(PDO::FETCH_ASSOC);
         if (!$resultat){
@@ -31,7 +30,7 @@ class JeuxRepository extends BDD{
     }
 
     public function ajouter(Jeux $j): int{ //je meteais arreter la et je devais maide du TP4 pour le finir !
-        $requete = BDD::$pdo->prepare("INSERT INTO Jeux (nom_jeux, configuration_minimal, configuration_requise, description_jeux , logo) VALUES (:nom_jeux, :configuration_minimal, :configuration_requise, :description_jeux , :logo)");
+        $requete = self::$pdo->prepare("INSERT INTO Jeux (nom_jeux, configuration_minimal, configuration_requise, description_jeux , logo) VALUES (:nom_jeux, :configuration_minimal, :configuration_requise, :description_jeux , :logo)");
         $requete->execute([
             "nom_jeux" => $j->getNom_jeux(),
             "configuration_minimal" => $j->getConfig_minimal(),
@@ -40,7 +39,7 @@ class JeuxRepository extends BDD{
             "logo" => $j->getLogo()
         ]);
         $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
-        return BDD::$pdo->lastInsertId();
+        return self::$pdo->lastInsertId();
     }
 
 

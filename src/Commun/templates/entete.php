@@ -7,6 +7,8 @@
             <button type="submit">Deconnexion</button>
             </form>
 
+            <a href="index.php?module=jeux&amp;route=liste">liste jeux</a>
+
             <a href="index.php?module=utilisateur&amp;route=test">
                 test
             </a>
