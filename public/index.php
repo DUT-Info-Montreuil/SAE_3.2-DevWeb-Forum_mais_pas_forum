@@ -1,4 +1,5 @@
 <?php
+//lien testage : http://localhost/SAE_3.2-DevWeb-Forum_mais_pas_forum/public/index.php?module=jeux
 session_set_cookie_params([
     "lifetime" => 0,
     "path" => "/",
