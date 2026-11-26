@@ -24,12 +24,20 @@ class JeuxRouteur{
             }
         }elseif($route === "formulaire_modification"){
             $id_jeux = filter_input(INPUT_GET , "id_jeux" , FILTER_VALIDATE_INT);
-            if($id_jeux === false || $id_jeux === null || $_SERVER["REQUEST_METHOD"] !== "GET"){
+            if($id_jeux === false || $id_jeux === null){
                 http_response_code(404);
                 echo "Identifiant incorrect";
-            }else{
-                $this->jeuxController->formulaireModification($id_jeux);
+                exit;
             }
+
+            if($_SERVER["REQUEST_METHOD"] !== "GET"){
+                http_response_code(404);
+                exit;
+            }
+
+
+            $this->jeuxController->formulaireModification($id_jeux);
+
         }elseif($route === "modifier"){
             if($_SERVER["REQUEST_METHOD"] !== "POST"){
                 http_response_code(404);
