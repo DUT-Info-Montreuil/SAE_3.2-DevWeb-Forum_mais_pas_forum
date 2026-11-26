@@ -12,7 +12,7 @@ session_start();
 //Globale
 require_once __DIR__ . '/../src/Commun/Xss.php';
 require_once __DIR__ . '/../src/Commun/Csrf.php';
-require_once __DIR__ . '/../src/Jeux/Model/BDD.php';
+
 //Module Jeux
 require_once __DIR__ . '/../src/Jeux/Controller/JeuxController.php';
 require_once __DIR__ . '/../src/Jeux/Model/Jeux.php';
