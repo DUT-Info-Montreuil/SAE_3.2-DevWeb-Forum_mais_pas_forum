@@ -1,6 +1,6 @@
 <?php
-
-class JeuxView
+require_once __DIR__ . '/../../Commun/Vue.php';
+class JeuxView extends Vue
 {
     public function __construct()
     {
