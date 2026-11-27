@@ -37,7 +37,7 @@ class StudioView extends Vue
         $this->afficherPage('creation studio');
     }
 
-    public function afficherDetail(?Studio $studio): void{
+    public function afficherDetail(?Studio $studio , array $jeux): void{
         $this->debutContenu();
         if($studio == null){
             ?>
@@ -50,10 +50,28 @@ class StudioView extends Vue
             <h1>nom Studio  : <?=e($studio->getNomStudio())?></h1>
             <h2>nb Abonnée  : <?=$studio->getNbAbonne()?></h2>
 
+            <?php
+            self::afficherRelationStudioJeux($jeux);
+        }
+        $this->afficherPage('detail studio');
+    }
+
+    public function afficherRelationStudioJeux(array $jeux){//comme c'est appeler dans la methode details bah pas de debutContenue
+        ?>
+        <h2>Jeux</h2>
+        <ul>
+        <?php
+
+        foreach ($jeux as $jeu) {
+            ?>
+            <li><a href="index.php?module=jeux&route=detail&id_jeux=<?= $jeu->getId() ?>"><?=e($jeu->getNom_jeux())?></a></li>
+            <p></p>
 
             <?php
         }
-        $this->afficherPage('detail studio');
+        ?>
+        </ul>
+        <?php
     }
 
 }

@@ -55,7 +55,7 @@ elseif($module == "jeux"){
 
     $jeuxview = new JeuxView();
     $jeuxrepository = new JeuxRepository();
-    $controlleurjeux = new JeuxController($jeuxrepository , $jeuxview);
+    $controlleurjeux = new JeuxController($jeuxrepository , $jeuxview , new StudioRepository());
     $router = new JeuxRouteur($controlleurjeux);
     $router->router();
 }

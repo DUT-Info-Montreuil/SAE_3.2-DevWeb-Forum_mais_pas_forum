@@ -53,7 +53,8 @@ class StudioController {
     }
     public function detailStudio(int $idStudio): void{
         $studio = $this->studioRepository->findById($idStudio);
-        $this->vue->afficherDetail($studio);
+        $jeux = $this->studioRepository->findJeuxByStudio($idStudio);
+        $this->vue->afficherDetail($studio,$jeux);
     }
 
 

@@ -2,9 +2,11 @@
 class JeuxController{
     private JeuxRepository  $jeuxRepository;
     private JeuxView $jeuxView;
-public function __construct($jeuxRepository , $jeuxView){
+    private StudioRepository $studioRepository;// pour recup la liste des studios
+public function __construct($jeuxRepository , $jeuxView ,$studioRepository){
     $this->jeuxRepository = $jeuxRepository;
     $this->jeuxView = $jeuxView;
+    $this->studioRepository = $studioRepository;
 }
 
 public function liste(): void{
@@ -14,11 +16,13 @@ public function liste(): void{
 
 public function detail(int $id_jeux): void{
     $jeux = $this->jeuxRepository->findById($id_jeux);
-    $this->jeuxView->afficherDetail($jeux, []);
+    $studio = $this->jeuxRepository->findStudioByJeux($id_jeux);//recup le studio
+    $this->jeuxView->afficherDetail($jeux,$studio, []);
 }
 
 public function formulaireAjout(): void{
-    $this->jeuxView->afficherFormulaireAjout();
+    $studios = $this->studioRepository->findAll();
+    $this->jeuxView->afficherFormulaireAjout($studios);
 }
 
 public function formulaireModification($id): void{
@@ -34,7 +38,7 @@ public function formulaireModification($id): void{
 
 
 public function ajouter(): void{
-    if (!Csrf::verifier($_POST['csrf'] ?? null)) {
+    if (!Csrf::verifier($_POST['jeton'] ?? null)) {
         http_response_code(403);
         die('Jeton CSRF invalide');
     }
@@ -49,20 +53,23 @@ public function ajouter(): void{
         exit;
     }
 
-
+    $id_studios = $_POST['id_studio'] ?? [];
     $jeux = new Jeux(0 , $_POST['nom_jeux'] , $_POST['configuration_minimal'] , $_POST['configuration_requise'] , $_POST['description_jeux'] , $cheminLogo);
     $id_jeux = $this->jeuxRepository->ajouter($jeux);
+    foreach ($id_studios as $id_studio) {// pour chaque studio choisi on crée une relation developper
+        $this ->jeuxRepository->relationDevelopper($id_jeux,$id_studio);
+    }
+
     header('Location: index.php?module=jeux&route=detail&id_jeux=' . $id_jeux);
     exit;
 }
-
     public function modifier(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(404);
             exit;
         }
 
-        if (!Csrf::verifier($_POST['csrf'] ?? null)) {
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
             http_response_code(403);
             die('Jeton CSRF invalide');
         }
@@ -122,7 +129,7 @@ public function ajouter(): void{
             exit;
         }
 
-        if (!Csrf::verifier($_POST['csrf'] ?? null)) {
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
             http_response_code(403);
             die('Jeton CSRF invalide');
         }

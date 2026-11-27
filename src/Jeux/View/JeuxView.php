@@ -1,5 +1,11 @@
 <?php
-class JeuxView{
+
+require_once __DIR__ . '/../../Studio/Model/Studio.php';
+require_once __DIR__ . '/../Model/Jeux.php';
+require_once __DIR__ . '/../../Commun/Xss.php';//méthode e()
+require_once __DIR__ . '/../../Commun/Vue.php';
+
+class JeuxView extends Vue {
     public function __construct(){
 
     }
@@ -17,7 +23,7 @@ class JeuxView{
         echo "<a href=\"index.php?module=jeux&route=formulaire_ajout\">Ajouter</a>";
     }
 
-    public function afficherDetail(?Jeux $jeux , array$extension): void{
+    public function afficherDetail(?Jeux $jeux ,array $studios, array$extension): void{
         if($jeux == null){
             echo"Erreur en affichant le detail du jeux";
         }else{
@@ -44,6 +50,10 @@ class JeuxView{
             echo "<h1>Configuration Requise :{$jeux->getConfig_requise()}</h1>";
             echo "<h1>Description du jeux :{$jeux->getDescription()}</h1>";
 
+
+            self::afficherRelationStudioJeux($studios);
+
+
             //echo "<img src=\"../data/{$jeux->getLogo()}\" width=\"300\">";
             /*
             foreach ($dept as $departement) {
@@ -57,7 +67,7 @@ class JeuxView{
 
             echo '<form method="post" action="index.php?module=jeux&route=supprimer"><br>
             <input type="hidden" name="id_jeux" value="' . $jeux->getId() . '">
-            <input type="hidden" name="csrf" value="' . e(Csrf::jeton()) . '">
+            <input type="hidden" name="jeton" value="'. e($_SESSION["jeton"]) .'">
             <button type="submit">Supprimer</button>
             </form>';
 
@@ -67,24 +77,44 @@ class JeuxView{
         }
     }
 
-    public function afficherFormulaireAjout(): void{
-        echo '<form method="post" action="index.php?module=jeux&route=ajouter" enctype="multipart/form-data">
-            <input type="hidden" name="csrf" value="' . e(Csrf::jeton()) . '">
-            <input type ="text" required name="nom_jeux">
-            <input type ="file"  name="logo" accept="image/png,image/jpeg,image/svg+xml" required>
-            <input type ="number" required  name="configuration_minimal">
-            <input type ="number" required name="configuration_requise">
-            <textarea name="description_jeux" rows="5" cols="40" required placeholder="Description du jeu"></textarea>
-            
+    public function afficherFormulaireAjout(array $studios): void{
+        $this->debutContenu();
+        ?>
+        <form method="post" action="index.php?module=jeux&route=ajouter" enctype="multipart/form-data">
+            <input type="hidden" name="jeton" value="<?= e($_SESSION["jeton"]) ?>">
+            <label for="nom_jeux">Nom</label>
+            <input type ="text" required name="nom_jeux"><br>
+            <label for="id_studio"> Studio développeur du jeu</label>
+            <?php
+            foreach ($studios as $studio){ ?>
+                    <div>
+                <input type="checkbox" name="id_studio[]" id="studio<?= $studio->getIdStudio() ?>" value="<?= $studio->getIdStudio() ?>">
+                <label for="studio<?= $studio->getIdStudio() ?>">
+                    <?= e($studio->getNomStudio()) ?>
+                </label>
+                    </div>
+            <?php }//voir en javascript pour trouver un moyen de verifier qu'au moins une case est coché car le require force de cochez tt les cases
+            ?>
+            <br>
+            <label for="logo">logo</label>
+            <input type ="file"  name="logo" accept="image/png,image/jpeg,image/svg+xml" required><br>
+            <label for="configuration_minimal">configuration minimal</label>
+            <input type ="number" required  name="configuration_minimal"><br>
+            <label for="configuration_requise">configuration requise</label>
+            <input type ="number" required name="configuration_requise"><br>
+            <textarea name="description_jeux" rows="5" cols="40" required placeholder="Description du jeu"></textarea><br>
             <button type="Submit"> Ajouter </button>
-            
-        </form>';
+        </form>
+        <?php
+        $this->afficherPage('creation jeux');
+
     }
 
 
     public function afficherFormulaireModification(Jeux $j): void{
         echo '<form method="post" action="index.php?module=jeux&route=modifier" enctype="multipart/form-data">
-         <input type="hidden" name="csrf" value="' . e(Csrf::jeton()) . '">  
+         <input type="hidden" name="jeton" value="'. e($_SESSION["jeton"]) .'">
+         
           
     <input type="hidden" name="id_jeux" value="' . $j->getId() . '">
 
@@ -105,6 +135,25 @@ class JeuxView{
         </form>';
 
 
+    }
+    public function afficherRelationStudioJeux(array $studios){//comme c'est appeler dans la methode details bah pas de debutContenue
+        //mettre que le nom du studio affichés sois un lien vers le detail du studio
+
+        ?>
+        <h2>Studio(s)</h2>
+        <ul>
+        <?php
+
+        foreach ($studios as $studio) {
+            ?>
+            <li><a href="index.php?module=studio&route=detail&id=<?= $studio->getIdStudio() ?>"><?=e($studio->getNomStudio())?></a></li>
+
+
+            <?php
+        }
+        ?>
+        </ul>
+        <?php
     }
 
 

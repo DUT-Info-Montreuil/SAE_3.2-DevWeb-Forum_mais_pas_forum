@@ -4,8 +4,8 @@ class JeuxRepository extends BDD{
 
     public function __construct()
     {
-
         parent::__construct();
+
     }
     public function findAll(): array{
         $requete = self::$pdo->prepare("SELECT * FROM Jeux");
@@ -70,6 +70,36 @@ class JeuxRepository extends BDD{
 
         $requete->execute(["id_jeux" => $id_jeux]);
     }
+
+    public function relationDevelopper(int $id_jeux, int $id_studio): void//le studio qui à créer le jeu
+    {
+        $requete = self::$pdo->prepare('INSERT INTO Developper (id_jeux, id_studio)VALUES (:id_jeux, :id_studio)');
+        $requete->execute(['id_jeux' => $id_jeux, 'id_studio' => $id_studio]);
+    }
+
+    public function findStudioByJeux(int $id_jeux): array // pour recup le studio de la relation faire la meme dans Studio mais pour une liste de jeu
+    {
+        $requete = self::$pdo->prepare('SELECT id_studio FROM Developper WHERE id_jeux = :id_jeux');
+        $requete->execute(['id_jeux' => $id_jeux]);
+        $lignes = $requete->fetchAll(PDO::FETCH_ASSOC);
+        $studios = [];
+
+        foreach ($lignes as $ligne) {
+            $requete = self::$pdo->prepare('SELECT * FROM Studio WHERE id_studio = :id_studio');
+            $requete->execute(['id_studio' => $ligne['id_studio']]);// ligne est le tableau qui a un id qui est stockés dans la liste d'id de lignes
+            $studio = $requete->fetch(PDO::FETCH_ASSOC);//on recupère 1 studio en array , il contient id ,nom et nbAbonne
+            if ($studio !== false) {//si sa a marché
+                $studios[] = StudioRepository::versStudio($studio);
+            }
+        }
+
+        return $studios;// retourne les studios correspondant
+    }
+    public static function versJeux(array $ligne): Jeux
+    {
+        return new Jeux((int)$ligne['id_jeux'], $ligne['nom_jeux'],$ligne['configuration_minimal'],$ligne['configuration_requise'],$ligne['description_jeux'] ,$ligne['logo']);
+    }
+
 
 
 
