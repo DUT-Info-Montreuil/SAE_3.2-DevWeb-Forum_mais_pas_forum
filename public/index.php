@@ -7,21 +7,31 @@ session_set_cookie_params([
     "samesite" => "Lax",
 ]);
 session_start();
+
 require_once __DIR__ . '/../src/Commun/Csrf.php';
+
+//Require Utilisateur
 require_once __DIR__ . '/../src/Utilisateur/RouteurUtilisateur.php';
 require_once __DIR__ . '/../src/Utilisateur/Controller/UtilisateurController.php';
 require_once __DIR__ . '/../src/Utilisateur/Model/UtilisateurRepository.php';
 
-
-//lien test
-//http://localhost/SAE_3.2-DevWeb-Forum_mais_pas_forum/
-
-//Module Jeux
+//Require Jeux
 require_once __DIR__ . '/../src/Jeux/Controller/JeuxController.php';
 require_once __DIR__ . '/../src/Jeux/Model/Jeux.php';
 require_once __DIR__ . '/../src/Jeux/Model/JeuxRepository.php';
 require_once __DIR__ . '/../src/Jeux/View/JeuxView.php';
 require_once __DIR__ . '/../src/Jeux/JeuxRouter.php';
+
+//Require Studio
+require_once __DIR__ . '/../src/Studio/RouteurStudio.php';
+require_once __DIR__ . '/../src/Studio/Controller/StudioController.php';
+require_once __DIR__ . '/../src/Studio/Model/StudioRepository.php';
+require_once __DIR__ . '/../src/Studio/Vue/StudioView.php';
+
+//lien test
+//http://localhost/SAE_3.2-DevWeb-Forum_mais_pas_forum/
+
+
 
 if (!isset($_SESSION["jeton"])){
     echo "c bon ";
@@ -48,6 +58,12 @@ elseif($module == "jeux"){
     $controlleurjeux = new JeuxController($jeuxrepository , $jeuxview);
     $router = new JeuxRouteur($controlleurjeux);
     $router->router();
-}else{
+}
+elseif ($module == "studio") {
+    $controleur = new StudioController(new StudioRepository() ,new StudioView() );
+    $routeur = new RouteurStudio($controleur);
+    $routeur->router();
+}
+else{
     echo "Router invalide";
 }
