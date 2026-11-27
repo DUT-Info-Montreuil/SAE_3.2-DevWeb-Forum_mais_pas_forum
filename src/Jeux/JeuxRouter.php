@@ -78,7 +78,20 @@ class JeuxRouteur{
                 exit;
             }
             $this->jeuxController->formulaireAjout();
+        }elseif($route === 'donner_avis'){
+            if($_SERVER["REQUEST_METHOD"] !== "POST"){
+                http_response_code(404);
+                exit;
+            }
+
+        $this->jeuxController->donner_avis();
+        }elseif($route === 'supprimer_avis'){
+            if($_SERVER["REQUEST_METHOD"] !== "POST"){
+                http_response_code(404);
+                exit;
+            }
         }
+        $this->jeuxController->supprimer_avis();
     }
 
 }

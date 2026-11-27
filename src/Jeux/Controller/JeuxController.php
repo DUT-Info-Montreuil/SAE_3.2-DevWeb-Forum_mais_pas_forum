@@ -14,7 +14,11 @@ public function liste(): void{
 
 public function detail(int $id_jeux): void{
     $jeux = $this->jeuxRepository->findById($id_jeux);
-    $this->jeuxView->afficherDetail($jeux, []);
+
+    $avis = $this->jeuxRepository->resultat_avis($id_jeux);
+
+    $this->jeuxView->afficherDetail($jeux, [] , $avis);
+
 }
 
 public function formulaireAjout(): void{
@@ -34,7 +38,7 @@ public function formulaireModification($id): void{
 
 
 public function ajouter(): void{
-    if (!Csrf::verifier($_POST['csrf'] ?? null)) {
+    if (!Csrf::verifier($_POST['jeton'] ?? null)) {
         http_response_code(403);
         die('Jeton CSRF invalide');
     }
@@ -62,7 +66,7 @@ public function ajouter(): void{
             exit;
         }
 
-        if (!Csrf::verifier($_POST['csrf'] ?? null)) {
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
             http_response_code(403);
             die('Jeton CSRF invalide');
         }
@@ -112,7 +116,7 @@ public function ajouter(): void{
        throw $e;
         }
 
-        header('Location: index.php?route=detail&id_jeux=' . $id_jeux );
+        header('Location: index.php?module=jeux&route=detail&id_jeux=' . $id_jeux );
         exit;
     }
 
@@ -122,7 +126,7 @@ public function ajouter(): void{
             exit;
         }
 
-        if (!Csrf::verifier($_POST['csrf'] ?? null)) {
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
             http_response_code(403);
             die('Jeton CSRF invalide');
         }
@@ -195,5 +199,128 @@ public function ajouter(): void{
         return $chemin;
     }
 
+    public function donner_avis(): void{
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
+            http_response_code(403);
+            die('Jeton CSRF invalide');
+        }
+        if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+            http_response_code(404);
+            exit;
+        }
+
+
+        $id_jeux = filter_var($_POST['id_jeux'] ?? null, FILTER_VALIDATE_INT);
+        $note = filter_var($_POST['note'] ?? null , FILTER_VALIDATE_INT);
+        $description_avis = trim($_POST['description_avis'] ?? '');
+
+
+        if ($id_jeux === false || $id_jeux === null || $note === false || $note === null || $note < 0 || $note > 20) {
+            http_response_code(400);
+            exit('Informations invalides');
+        }
+
+        $jeu = $this->jeuxRepository->findById($id_jeux);
+
+        if ($jeu === null) {
+            http_response_code(404);
+            exit('Jeu non trouvée');
+        }
+
+        $id_utilisateur = $_SESSION['id_utilisateur'] ?? null;
+
+        if ($id_utilisateur === null) {
+            http_response_code(401);
+            exit('Creer un compte avant de donner un avis');
+        }
+
+        $this->jeuxRepository->donner_avis(
+            $id_utilisateur,
+            $id_jeux,
+            $description_avis,
+            $note
+        );
+
+        header('Location: index.php?module=jeux&route=detail&id_jeux=' . $id_jeux);
+        exit;
+
+
+
+
+    }
+
+    public function modifier_avis(): void{
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
+            http_response_code(403);
+            die('Jeton CSRF invalide');
+        }
+        if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+            http_response_code(404);
+            exit;
+        }
+
+
+        $id_jeux = filter_var($_POST['id_jeux'] ?? null, FILTER_VALIDATE_INT);
+        $note = filter_var($_POST['note'] ?? null , FILTER_VALIDATE_INT);
+        $description_avis = trim($_POST['description_avis'] ?? '');
+
+
+        if ($id_jeux === false || $id_jeux === null || $note === false || $note === null || $note < 0 || $note > 20 || $description_avis === '') {
+            http_response_code(400);
+            exit('Informations invalides');
+        }
+
+        $jeu = $this->jeuxRepository->findById($id_jeux);
+
+        if ($jeu === null) {
+            http_response_code(404);
+            exit('Jeu non trouvée');
+        }
+
+        $id_utilisateur = $_SESSION['id_utilisateur'] ?? null;
+
+        if($id_utilisateur == null){
+            http_response_code(404);
+            exit('Utilisateur introuvable');
+        }
+
+    $this->jeuxRepository->modifier_avis(
+            $id_utilisateur,
+            $id_jeux,
+            $description_avis,
+            $note
+        );
+
+        header('Location: index.php?module=jeux&route=detail&id_jeux=' . $id_jeux);
+        exit;
+    }
+
+
+    public function supprimer_avis(): void{
+        if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+            http_response_code(404);
+            exit;
+        }
+
+        if (!Csrf::verifier($_POST['jeton'] ?? null)) {
+            http_response_code(403);
+            die('Jeton CSRF invalide');
+        }
+        $id_jeux = filter_var($_POST['id_jeux'] ?? null, FILTER_VALIDATE_INT);
+
+        $id_utilisateur = $_SESSION['id_utilisateur'] ?? null;
+
+        if ($id_jeux === false || $id_jeux === null  || $id_utilisateur === null) {
+            http_response_code(400);
+            exit;
+        }
+
+        $this->jeuxRepository->supprimer_avis($id_utilisateur, $id_jeux);
+
+        header('Location: index.php?module=jeux&route=detail&id_jeux=' . $id_jeux);
+
+        exit;
+
+    }
 
 }
