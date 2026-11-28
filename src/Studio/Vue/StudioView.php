@@ -30,6 +30,11 @@ class StudioView extends Vue
             <input type="hidden" name="jeton" value="<?= e($_SESSION["jeton"]) ?>">
             <label for="nom_studio">Nom</label>
             <input type="text" id="nom_studio" name="nom_studio" required>
+            <br>
+            <label for="logo">logo</label>
+            <input type ="file"  name="logo" accept="image/png,image/jpeg,image/svg+xml" required><br>
+            <label for="description_studio">Description du studio</label><br>
+            <textarea name="description_studio" id="description_studio" rows="5" cols="40" required placeholder="Decrire le studio"></textarea><br>
             <button type="submit">Envoyer</button>
         </form>
 
@@ -44,13 +49,24 @@ class StudioView extends Vue
             <p>Erreur en affichant le detail du studio</p>
             <?php
         }else{
+            $logo = $studio->getLogoStudio();
+            $envoye = preg_match('~\Alogo_Studio/[a-f0-9]{32}\.(png|jpg|svg)\z~',$logo) === 1;
+            $existe = $envoye && is_file(__DIR__ . '/../../../data/' . $logo);
 
+            if ($existe) {
+                $src = '../data/' . $logo;
+                echo '<img src="' . e($src) . '" alt="logo de ' . e($studio->getNomStudio()) . '" width="180">';
+            } else {
+                echo '<p>Logo indisponible</p>';
+            }
             ?>
             <h2>id Studio  : <?=$studio->getIdStudio()?></h2>
             <h1>nom Studio  : <?=e($studio->getNomStudio())?></h1>
             <h2>nb Abonnée  : <?=$studio->getNbAbonne()?></h2>
+            <h2>Description du studio :<?=$studio->getDescriptionStudio()?></h2>
 
             <?php
+
             self::afficherRelationStudioJeux($jeux);
         }
         $this->afficherPage('detail studio');

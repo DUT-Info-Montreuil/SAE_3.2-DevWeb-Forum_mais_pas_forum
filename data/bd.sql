@@ -33,6 +33,8 @@ CREATE TABLE Studio(
    id_studio INT,
    nom_studio VARCHAR(256),
    nb_abonne INT,
+   logo_studio VARCHAR(256),
+   description_studio TEXT,--pour text plus long mais c pas vraiment important
    PRIMARY KEY(id_studio)
 );
 

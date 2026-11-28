@@ -18,13 +18,13 @@ Class StudioRepository extends BDD {
     }
     public static function versStudio(array $ligne): Studio
     {
-        return new Studio((int)$ligne['id_studio'], $ligne['nom_studio']);
+        return new Studio((int)$ligne['id_studio'], $ligne['nom_studio'],$ligne['description_studio'],$ligne['logo_studio']);
     }
 
     public function creerStudio(Studio $studio): int
     {
-        $requete = self::$pdo->prepare('INSERT INTO Studio(nom_studio) VALUES (:nom_studio)');
-        $requete->execute(['nom_studio' => $studio->getNomStudio()]);
+        $requete = self::$pdo->prepare('INSERT INTO Studio(nom_studio,description_studio,logo_studio) VALUES (:nom_studio,:description_studio,:logo_studio)');
+        $requete->execute(['nom_studio' => $studio->getNomStudio(),'description_studio' => $studio->getDescriptionStudio(),'logo_studio' => $studio->getLogoStudio()]);
         return self::$pdo->lastInsertId();
     }
 
