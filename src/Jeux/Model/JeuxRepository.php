@@ -66,6 +66,10 @@ class JeuxRepository extends BDD{
     }
 
     public function supprimer(int $id_jeux): void{
+
+        $requete = BDD::$pdo->prepare("DELETE FROM Developper WHERE id_jeux = :id_jeux");
+        $requete->execute(['id_jeux' => $id_jeux ]);
+
         $requete = BDD::$pdo->prepare("DELETE FROM Jeux WHERE id_jeux = :id_jeux");
 
         $requete->execute(["id_jeux" => $id_jeux]);
